@@ -76,8 +76,30 @@ namespace DownloadPictures
             foreach (HtmlElement e in doc.GetElementsByTagName("IMG"))
             {
                 PicUrl = e.GetAttribute("src");
-                wc.DownloadFile(PicUrl, args[1] + Path.GetFileName(PicUrl));
-                PicUrls.Add(e.GetAttribute("src"));
+
+                string fileName = PicUrl;
+
+                if(PicUrls.Contains(PicUrl)==false)
+                {
+                    PicUrls.Add(e.GetAttribute("src"));
+
+                    foreach (var item in Path.GetInvalidPathChars())
+                    {
+                        if (PicUrl.Contains(item))
+                            fileName = fileName.Replace(item, '_');
+                    }
+
+                    fileName = Path.GetFileName(fileName);
+
+                    foreach (var item in new string[9]{@"\",@"/",@"?",@":",@"|",@"*",@"<",@">",@""""})
+                    {
+                        if (PicUrl.Contains(item))
+                            fileName = fileName.Replace(item, "_");
+                    }
+
+
+                    wc.DownloadFile(PicUrl, args[1] + fileName);
+                }
             }
 
         }
