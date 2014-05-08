@@ -54,6 +54,9 @@ namespace DownloadPictures
     class Program
     {
         static List<string> PicUrls = new List<string>();
+        static string[] InvalidPathStrings = new string[9] { @"\", @"/", @"?", @":", @"|", @"*", @"<", @">", @"""" };
+        static List<string> PicExtensions = new List<string>() { ".jpg", ".jpeg", ".gif", ".png", ".bmp" };
+
 
         [STAThread]
         static void Main(string[] args)
@@ -79,22 +82,25 @@ namespace DownloadPictures
 
                 string fileName = PicUrl;
 
+                if (PicExtensions.Contains(Path.GetExtension(PicUrl)) == false)
+                    continue;
+
                 if(PicUrls.Contains(PicUrl)==false)
                 {
                     PicUrls.Add(e.GetAttribute("src"));
 
-                    foreach (var item in Path.GetInvalidPathChars())
+                    foreach (var InvalidPathChar in Path.GetInvalidPathChars())
                     {
-                        if (PicUrl.Contains(item))
-                            fileName = fileName.Replace(item, '_');
+                        if (PicUrl.Contains(InvalidPathChar))
+                            fileName = fileName.Replace(InvalidPathChar, '_');
                     }
 
                     fileName = Path.GetFileName(fileName);
 
-                    foreach (var item in new string[9]{@"\",@"/",@"?",@":",@"|",@"*",@"<",@">",@""""})
+                    foreach (var InvalidPathString in InvalidPathStrings)
                     {
-                        if (PicUrl.Contains(item))
-                            fileName = fileName.Replace(item, "_");
+                        if (PicUrl.Contains(InvalidPathString))
+                            fileName = fileName.Replace(InvalidPathString, "_");
                     }
 
 
