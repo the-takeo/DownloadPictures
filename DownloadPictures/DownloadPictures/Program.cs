@@ -70,44 +70,65 @@ namespace DownloadPictures
             UnDisplayedBrowser udb = new UnDisplayedBrowser();
             udb.NavigateAndWait(args[0]);
 
+            string folder = args[1];
+
             HtmlDocument doc = udb.Document;
 
             WebClient wc = new WebClient();
 
-            string PicUrl;
-
-            foreach (HtmlElement e in doc.GetElementsByTagName("IMG"))
+            //Webページに表示されている画像の取得
+            foreach (HtmlElement picElement in doc.GetElementsByTagName("IMG"))
             {
-                PicUrl = e.GetAttribute("src");
+                string picUrl = picElement.GetAttribute("src");
 
-                string fileName = PicUrl;
-
-                if (PicExtensions.Contains(Path.GetExtension(PicUrl)) == false)
+                if (PicExtensions.Contains(Path.GetExtension(picUrl)) == false)
                     continue;
 
-                if(PicUrls.Contains(PicUrl)==false)
+                if (PicUrls.Contains(picUrl) == false)
                 {
-                    PicUrls.Add(e.GetAttribute("src"));
-
-                    foreach (var InvalidPathChar in Path.GetInvalidPathChars())
-                    {
-                        if (PicUrl.Contains(InvalidPathChar))
-                            fileName = fileName.Replace(InvalidPathChar, '_');
-                    }
-
-                    fileName = Path.GetFileName(fileName);
-
-                    foreach (var InvalidPathString in InvalidPathStrings)
-                    {
-                        if (PicUrl.Contains(InvalidPathString))
-                            fileName = fileName.Replace(InvalidPathString, "_");
-                    }
-
-
-                    wc.DownloadFile(PicUrl, args[1] + fileName);
+                    PicUrls.Add(picElement.GetAttribute("src"));
                 }
             }
 
+            //サムネイル画像をリンク先画像に差し替え
+            foreach (HtmlElement linkElement in doc.GetElementsByTagName("A"))
+            {
+                string picUrl = linkElement.GetAttribute("href");
+                if (PicExtensions.Contains(Path.GetExtension(picUrl)) == false)
+                    continue;
+
+                foreach (HtmlElement picElement in linkElement.GetElementsByTagName("IMG"))
+                {
+                    if (PicUrls.Contains(picElement.GetAttribute("src")))
+                    {
+                        PicUrls.Remove(picElement.GetAttribute("src"));
+                        PicUrls.Add(picUrl);
+                    }
+                }
+            }
+
+            foreach (var picUrl in PicUrls)
+            {
+                string fileName = picUrl;
+
+                //禁則文字の置換
+                foreach (var InvalidPathChar in Path.GetInvalidPathChars())
+                {
+                    if (picUrl.Contains(InvalidPathChar))
+                        fileName = fileName.Replace(InvalidPathChar, '_');
+                }
+
+                fileName = Path.GetFileName(fileName);
+
+                //禁則文字の置換
+                foreach (var InvalidPathString in InvalidPathStrings)
+                {
+                    if (picUrl.Contains(InvalidPathString))
+                        fileName = fileName.Replace(InvalidPathString, "_");
+                }
+
+                wc.DownloadFile(picUrl, folder + fileName);
+            }
         }
     }
 }
