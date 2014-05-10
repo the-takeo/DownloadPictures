@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Net;
@@ -57,6 +57,11 @@ namespace DownloadPictures
         static string[] InvalidPathStrings = new string[9] { @"\", @"/", @"?", @":", @"|", @"*", @"<", @">", @"""" };
         static List<string> PicExtensions = new List<string>() { ".jpg", ".jpeg", ".gif", ".png", ".bmp" };
 
+        static bool IsDownloading = false;
+
+        static string DownloadingfileName = string.Empty;
+
+        static int Count = 1;
 
         [STAThread]
         static void Main(string[] args)
@@ -75,6 +80,7 @@ namespace DownloadPictures
             HtmlDocument doc = udb.Document;
 
             WebClient wc = new WebClient();
+            wc.DownloadFileCompleted += wc_DownloadFileCompleted;
 
             //Webページに表示されている画像の取得
             foreach (HtmlElement picElement in doc.GetElementsByTagName("IMG"))
@@ -109,25 +115,44 @@ namespace DownloadPictures
 
             foreach (var picUrl in PicUrls)
             {
-                string fileName = picUrl;
+                waitforAsync();
+
+                DownloadingfileName = picUrl;
 
                 //禁則文字の置換
                 foreach (var InvalidPathChar in Path.GetInvalidPathChars())
                 {
                     if (picUrl.Contains(InvalidPathChar))
-                        fileName = fileName.Replace(InvalidPathChar, '_');
+                        DownloadingfileName = DownloadingfileName.Replace(InvalidPathChar, '_');
                 }
 
-                fileName = Path.GetFileName(fileName);
+                DownloadingfileName = Path.GetFileName(DownloadingfileName);
 
                 //禁則文字の置換
                 foreach (var InvalidPathString in InvalidPathStrings)
                 {
                     if (picUrl.Contains(InvalidPathString))
-                        fileName = fileName.Replace(InvalidPathString, "_");
+                        DownloadingfileName = DownloadingfileName.Replace(InvalidPathString, "_");
                 }
 
-                wc.DownloadFile(picUrl, folder + fileName);
+                IsDownloading = true;
+
+                wc.DownloadFileAsync(new Uri(picUrl), folder + DownloadingfileName);
+            }
+        }
+
+        static void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            Console.WriteLine("{0}件中{1}件のダウンロードが完了しました。", PicUrls.Count, Count);
+            Count++;
+            IsDownloading = false;
+        }
+
+        private static void waitforAsync()
+        {
+            while(IsDownloading)
+            {
+                Thread.Sleep(1000);
             }
         }
     }
