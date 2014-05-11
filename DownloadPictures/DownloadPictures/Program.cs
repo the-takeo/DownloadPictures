@@ -152,6 +152,7 @@ namespace DownloadPictures
         {
             while(IsDownloading)
             {
+                
                 Thread.Sleep(1000);
             }
         }
