@@ -16,6 +16,11 @@ namespace DownloadPictures
 
         TimeSpan timeout = new TimeSpan(0, 0, 10);
 
+        public UnDisplayedBrowser()
+        {
+            this.ScriptErrorsSuppressed = true;
+        }
+
         protected override void OnDocumentCompleted(WebBrowserDocumentCompletedEventArgs e)
         {
             if (e.Url == this.Url)
@@ -25,11 +30,6 @@ namespace DownloadPictures
         protected override void OnNewWindow(CancelEventArgs e)
         {
             e.Cancel = true;
-        }
-
-        public UnDisplayedBrowser()
-        {
-            this.ScriptErrorsSuppressed = true;
         }
 
         public bool NavigateAndWait(string url)
@@ -58,13 +58,17 @@ namespace DownloadPictures
         List<string> picExtensions = new List<string>() { ".jpg", ".jpeg", ".gif", ".png", ".bmp" };
 
         bool isDownloading = false;
-
         string downloadingfileName = string.Empty;
+        int count = 1;
 
-        int Count = 1;
+        TimeSpan timeout = new TimeSpan(0, 0, 10);
+        DateTime start = new DateTime();
 
         public void StartDownload(string url, string folder)
         {
+            if (folder.EndsWith(@"\") == false)
+                folder=folder + @"\";
+
             UnDisplayedBrowser udb = new UnDisplayedBrowser();
             udb.NavigateAndWait(url);
 
@@ -106,7 +110,8 @@ namespace DownloadPictures
 
             foreach (var picUrl in picUrls)
             {
-                waitforAsync();
+                if (waitforAsync() == false)
+                    wc.CancelAsync();
 
                 downloadingfileName = picUrl;
 
@@ -127,24 +132,32 @@ namespace DownloadPictures
                 }
 
                 isDownloading = true;
+                start = DateTime.Now;
 
                 wc.DownloadFileAsync(new Uri(picUrl), folder + downloadingfileName);
             }
+
+            waitforAsync();
         }
 
         void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            Console.WriteLine("{0}件中{1}件のダウンロードが完了しました。", picUrls.Count, Count);
-            Count++;
+            Console.WriteLine("{0}件中{1}件目のダウンロードが完了しました。", picUrls.Count, count);
+            count++;
             isDownloading = false;
         }
 
-        private void waitforAsync()
+        private bool waitforAsync()
         {
             while (isDownloading)
             {
+                if (DateTime.Now - start > timeout)
+                    return false;
+
                 Thread.Sleep(1000);
             }
+
+            return true;
         }
     }
 }
