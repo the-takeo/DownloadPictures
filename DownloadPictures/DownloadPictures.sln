@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadPictures", "DownloadPictures\DownloadPictures.csproj", "{54B06D9C-57C4-4518-9AED-F9198DB4E158}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadPicturesGUI", "DownloadPicturesGUI\DownloadPicturesGUI.csproj", "{9ED61D1D-9501-4D4A-8B33-C69F12E856BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{54B06D9C-57C4-4518-9AED-F9198DB4E158}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54B06D9C-57C4-4518-9AED-F9198DB4E158}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54B06D9C-57C4-4518-9AED-F9198DB4E158}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ED61D1D-9501-4D4A-8B33-C69F12E856BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ED61D1D-9501-4D4A-8B33-C69F12E856BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ED61D1D-9501-4D4A-8B33-C69F12E856BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ED61D1D-9501-4D4A-8B33-C69F12E856BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
