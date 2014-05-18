@@ -57,15 +57,15 @@ namespace DownloadPictures
     /// <summary>
     /// 情報を取得し、ダウンロードを行うクラス
     /// </summary>
-    class DownloadPictures
+    public class DownloadPictures
     {
-        List<string> picUrls = new List<string>();
+        //List<string> picUrls = new List<string>();
 
         string[] invalidPathStrings = new string[9] { @"\", @"/", @"?", @":", @"|", @"*", @"<", @">", @"""" };
         List<string> picExtensions = new List<string>() { ".jpg", ".jpeg", ".gif", ".png", ".bmp" };
 
         bool isDownloading = false;
-        string downloadingfileName = string.Empty;
+        int numberOfPictures;
         int count = 1;
 
         TimeSpan timeout = new TimeSpan(0, 0, 10);
@@ -73,11 +73,13 @@ namespace DownloadPictures
 
         /// <summary>
         /// 指定したURLのWebページに表示されている画像アドレスを取得し、
-        /// クラス変数に格納する
+        /// リストにして返す。
         /// </summary>
         /// <param name="url">Webページのアドレス</param>
-        public void GetPictures(string url)
+        public List<string> GetPictures(string url)
         {
+            List<string> pictureAdresses = new List<string>();
+
             UnDisplayedBrowser udb = new UnDisplayedBrowser();
             udb.NavigateAndWait(url);
 
@@ -92,9 +94,9 @@ namespace DownloadPictures
                 if (picExtensions.Contains(Path.GetExtension(picUrl)) == false)
                     continue;
 
-                if (picUrls.Contains(picUrl) == false)
+                if (pictureAdresses.Contains(picUrl) == false)
                 {
-                    picUrls.Add(picElement.GetAttribute("src"));
+                    pictureAdresses.Add(picElement.GetAttribute("src"));
                 }
             }
 
@@ -107,20 +109,22 @@ namespace DownloadPictures
 
                 foreach (HtmlElement picElement in linkElement.GetElementsByTagName("IMG"))
                 {
-                    if (picUrls.Contains(picElement.GetAttribute("src")))
+                    if (pictureAdresses.Contains(picElement.GetAttribute("src")))
                     {
-                        picUrls.Remove(picElement.GetAttribute("src"));
-                        picUrls.Add(picUrl);
+                        pictureAdresses.Remove(picElement.GetAttribute("src"));
+                        pictureAdresses.Add(picUrl);
                     }
                 }
             }
+            return pictureAdresses;
         }
 
         /// <summary>
-        /// クラス変数に格納された情報を元に画像のダウンロードを開始する
+        /// 渡されたアドレスリストを元に画像のダウンロードを開始する
         /// </summary>
+        /// <param name="pictureAdresses">ダウンロード対象画像リスト</param>
         /// <param name="folder">ダウンロード先ディレクトリ</param>
-        public void StartDownload(string folder)
+        public void StartDownload(List<string> pictureAdresses, string folder)
         {
             if (folder.EndsWith(@"\") == false)
                 folder = folder + @"\";
@@ -128,7 +132,10 @@ namespace DownloadPictures
             WebClient wc = new WebClient();
             wc.DownloadFileCompleted += wc_DownloadFileCompleted;
 
-            foreach (var picUrl in picUrls)
+            string downloadingfileName = string.Empty;
+            numberOfPictures = pictureAdresses.Count;
+
+            foreach (var picUrl in pictureAdresses)
             {
                 if (waitforAsync() == false)
                     wc.CancelAsync();
@@ -162,7 +169,7 @@ namespace DownloadPictures
 
         void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            Console.WriteLine("{0}件中{1}件目のダウンロードが完了しました。", picUrls.Count, count);
+            Console.WriteLine("{0}件中{1}件目のダウンロードが完了しました。", numberOfPictures, count);
             count++;
             isDownloading = false;
         }
