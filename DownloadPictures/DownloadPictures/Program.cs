@@ -20,7 +20,9 @@ namespace DownloadPictures
 
             DownloadPictures dp = new DownloadPictures();
 
-            dp.StartDownload(args[0], args[1]);
+            dp.GetPictures(args[0]);
+
+            dp.StartDownload(args[1]);
         }
     }
 }

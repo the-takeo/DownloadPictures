@@ -10,6 +10,9 @@ using System.IO;
 
 namespace DownloadPictures
 {
+    /// <summary>
+    /// Webページ情報を取得するための非表示ウィブブラウザクラス
+    /// </summary>
     public class UnDisplayedBrowser : WebBrowser
     {
         bool isCompleted = false;
@@ -50,6 +53,10 @@ namespace DownloadPictures
             return true;
         }
     }
+
+    /// <summary>
+    /// 情報を取得し、ダウンロードを行うクラス
+    /// </summary>
     class DownloadPictures
     {
         List<string> picUrls = new List<string>();
@@ -64,18 +71,18 @@ namespace DownloadPictures
         TimeSpan timeout = new TimeSpan(0, 0, 10);
         DateTime start = new DateTime();
 
-        public void StartDownload(string url, string folder)
+        /// <summary>
+        /// 指定したURLのWebページに表示されている画像アドレスを取得し、
+        /// クラス変数に格納する
+        /// </summary>
+        /// <param name="url">Webページのアドレス</param>
+        public void GetPictures(string url)
         {
-            if (folder.EndsWith(@"\") == false)
-                folder=folder + @"\";
-
             UnDisplayedBrowser udb = new UnDisplayedBrowser();
             udb.NavigateAndWait(url);
 
             HtmlDocument doc = udb.Document;
 
-            WebClient wc = new WebClient();
-            wc.DownloadFileCompleted += wc_DownloadFileCompleted;
 
             //Webページに表示されている画像の取得
             foreach (HtmlElement picElement in doc.GetElementsByTagName("IMG"))
@@ -107,6 +114,19 @@ namespace DownloadPictures
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// クラス変数に格納された情報を元に画像のダウンロードを開始する
+        /// </summary>
+        /// <param name="folder">ダウンロード先ディレクトリ</param>
+        public void StartDownload(string folder)
+        {
+            if (folder.EndsWith(@"\") == false)
+                folder = folder + @"\";
+
+            WebClient wc = new WebClient();
+            wc.DownloadFileCompleted += wc_DownloadFileCompleted;
 
             foreach (var picUrl in picUrls)
             {
