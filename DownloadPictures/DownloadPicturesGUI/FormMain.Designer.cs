@@ -36,18 +36,22 @@
             this.gbTop = new System.Windows.Forms.GroupBox();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.gbInfomations = new System.Windows.Forms.GroupBox();
-            this.lblUrl = new System.Windows.Forms.Label();
-            this.lblFolder = new System.Windows.Forms.Label();
-            this.tbUrl = new System.Windows.Forms.TextBox();
-            this.tbFolder = new System.Windows.Forms.TextBox();
-            this.btnSelectFolder = new System.Windows.Forms.Button();
-            this.btnGetPictures = new System.Windows.Forms.Button();
-            this.btnStartDownload = new System.Windows.Forms.Button();
-            this.listView = new System.Windows.Forms.ListView();
             this.btnSelectAll = new System.Windows.Forms.Button();
+            this.btnStartDownload = new System.Windows.Forms.Button();
+            this.btnGetPictures = new System.Windows.Forms.Button();
+            this.btnSelectFolder = new System.Windows.Forms.Button();
+            this.tbFolder = new System.Windows.Forms.TextBox();
+            this.tbUrl = new System.Windows.Forms.TextBox();
+            this.lblFolder = new System.Windows.Forms.Label();
+            this.lblUrl = new System.Windows.Forms.Label();
+            this.listView = new System.Windows.Forms.ListView();
+            this.gbProgress = new System.Windows.Forms.GroupBox();
+            this.lblProgress = new System.Windows.Forms.Label();
+            this.bw = new System.ComponentModel.BackgroundWorker();
             this.menuStrip.SuspendLayout();
             this.gbTop.SuspendLayout();
             this.gbInfomations.SuspendLayout();
+            this.gbProgress.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblTop
@@ -80,7 +84,7 @@
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.closeToolStripMenuItem.Text = "Close";
             // 
             // gbTop
@@ -105,9 +109,6 @@
             // 
             this.gbInfomations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbInfomations.Controls.Add(this.btnSelectAll);
-            this.gbInfomations.Controls.Add(this.btnStartDownload);
-            this.gbInfomations.Controls.Add(this.btnGetPictures);
             this.gbInfomations.Controls.Add(this.btnSelectFolder);
             this.gbInfomations.Controls.Add(this.tbFolder);
             this.gbInfomations.Controls.Add(this.tbUrl);
@@ -115,42 +116,40 @@
             this.gbInfomations.Controls.Add(this.lblUrl);
             this.gbInfomations.Location = new System.Drawing.Point(278, 133);
             this.gbInfomations.Name = "gbInfomations";
-            this.gbInfomations.Size = new System.Drawing.Size(294, 416);
+            this.gbInfomations.Size = new System.Drawing.Size(294, 80);
             this.gbInfomations.TabIndex = 4;
             this.gbInfomations.TabStop = false;
             this.gbInfomations.Text = "Imformations";
             // 
-            // lblUrl
+            // btnSelectAll
             // 
-            this.lblUrl.AutoSize = true;
-            this.lblUrl.Location = new System.Drawing.Point(6, 15);
-            this.lblUrl.Name = "lblUrl";
-            this.lblUrl.Size = new System.Drawing.Size(27, 12);
-            this.lblUrl.TabIndex = 0;
-            this.lblUrl.Text = "URL";
+            this.btnSelectAll.Location = new System.Drawing.Point(8, 301);
+            this.btnSelectAll.Name = "btnSelectAll";
+            this.btnSelectAll.Size = new System.Drawing.Size(75, 23);
+            this.btnSelectAll.TabIndex = 7;
+            this.btnSelectAll.Text = "全選択";
+            this.btnSelectAll.UseVisualStyleBackColor = true;
+            this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
             // 
-            // lblFolder
+            // btnStartDownload
             // 
-            this.lblFolder.AutoSize = true;
-            this.lblFolder.Location = new System.Drawing.Point(6, 40);
-            this.lblFolder.Name = "lblFolder";
-            this.lblFolder.Size = new System.Drawing.Size(76, 12);
-            this.lblFolder.TabIndex = 1;
-            this.lblFolder.Text = "保存先フォルダ";
+            this.btnStartDownload.Location = new System.Drawing.Point(158, 301);
+            this.btnStartDownload.Name = "btnStartDownload";
+            this.btnStartDownload.Size = new System.Drawing.Size(130, 23);
+            this.btnStartDownload.TabIndex = 6;
+            this.btnStartDownload.Text = "ダウンロードする";
+            this.btnStartDownload.UseVisualStyleBackColor = true;
+            this.btnStartDownload.Click += new System.EventHandler(this.btnStartDownload_Click);
             // 
-            // tbUrl
+            // btnGetPictures
             // 
-            this.tbUrl.Location = new System.Drawing.Point(39, 12);
-            this.tbUrl.Name = "tbUrl";
-            this.tbUrl.Size = new System.Drawing.Size(249, 19);
-            this.tbUrl.TabIndex = 2;
-            // 
-            // tbFolder
-            // 
-            this.tbFolder.Location = new System.Drawing.Point(88, 37);
-            this.tbFolder.Name = "tbFolder";
-            this.tbFolder.Size = new System.Drawing.Size(171, 19);
-            this.tbFolder.TabIndex = 3;
+            this.btnGetPictures.Location = new System.Drawing.Point(158, 272);
+            this.btnGetPictures.Name = "btnGetPictures";
+            this.btnGetPictures.Size = new System.Drawing.Size(130, 23);
+            this.btnGetPictures.TabIndex = 5;
+            this.btnGetPictures.Text = "URLから画像を取得する";
+            this.btnGetPictures.UseVisualStyleBackColor = true;
+            this.btnGetPictures.Click += new System.EventHandler(this.btnGetPictures_Click);
             // 
             // btnSelectFolder
             // 
@@ -162,25 +161,37 @@
             this.btnSelectFolder.UseVisualStyleBackColor = true;
             this.btnSelectFolder.Click += new System.EventHandler(this.btnSelectFolder_Click);
             // 
-            // btnGetPictures
+            // tbFolder
             // 
-            this.btnGetPictures.Location = new System.Drawing.Point(158, 359);
-            this.btnGetPictures.Name = "btnGetPictures";
-            this.btnGetPictures.Size = new System.Drawing.Size(130, 23);
-            this.btnGetPictures.TabIndex = 5;
-            this.btnGetPictures.Text = "URLから画像を取得する";
-            this.btnGetPictures.UseVisualStyleBackColor = true;
-            this.btnGetPictures.Click += new System.EventHandler(this.btnGetPictures_Click);
+            this.tbFolder.Location = new System.Drawing.Point(88, 37);
+            this.tbFolder.Name = "tbFolder";
+            this.tbFolder.Size = new System.Drawing.Size(171, 19);
+            this.tbFolder.TabIndex = 3;
             // 
-            // btnStartDownload
+            // tbUrl
             // 
-            this.btnStartDownload.Location = new System.Drawing.Point(158, 387);
-            this.btnStartDownload.Name = "btnStartDownload";
-            this.btnStartDownload.Size = new System.Drawing.Size(130, 23);
-            this.btnStartDownload.TabIndex = 6;
-            this.btnStartDownload.Text = "ダウンロードする";
-            this.btnStartDownload.UseVisualStyleBackColor = true;
-            this.btnStartDownload.Click += new System.EventHandler(this.btnStartDownload_Click);
+            this.tbUrl.Location = new System.Drawing.Point(39, 12);
+            this.tbUrl.Name = "tbUrl";
+            this.tbUrl.Size = new System.Drawing.Size(249, 19);
+            this.tbUrl.TabIndex = 2;
+            // 
+            // lblFolder
+            // 
+            this.lblFolder.AutoSize = true;
+            this.lblFolder.Location = new System.Drawing.Point(6, 40);
+            this.lblFolder.Name = "lblFolder";
+            this.lblFolder.Size = new System.Drawing.Size(76, 12);
+            this.lblFolder.TabIndex = 1;
+            this.lblFolder.Text = "保存先フォルダ";
+            // 
+            // lblUrl
+            // 
+            this.lblUrl.AutoSize = true;
+            this.lblUrl.Location = new System.Drawing.Point(6, 15);
+            this.lblUrl.Name = "lblUrl";
+            this.lblUrl.Size = new System.Drawing.Size(27, 12);
+            this.lblUrl.TabIndex = 0;
+            this.lblUrl.Text = "URL";
             // 
             // listView
             // 
@@ -193,21 +204,38 @@
             this.listView.TabIndex = 3;
             this.listView.UseCompatibleStateImageBehavior = false;
             // 
-            // btnSelectAll
+            // gbProgress
             // 
-            this.btnSelectAll.Location = new System.Drawing.Point(8, 387);
-            this.btnSelectAll.Name = "btnSelectAll";
-            this.btnSelectAll.Size = new System.Drawing.Size(75, 23);
-            this.btnSelectAll.TabIndex = 7;
-            this.btnSelectAll.Text = "全選択";
-            this.btnSelectAll.UseVisualStyleBackColor = true;
-            this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
+            this.gbProgress.Controls.Add(this.lblProgress);
+            this.gbProgress.Controls.Add(this.btnStartDownload);
+            this.gbProgress.Controls.Add(this.btnSelectAll);
+            this.gbProgress.Controls.Add(this.btnGetPictures);
+            this.gbProgress.Location = new System.Drawing.Point(278, 219);
+            this.gbProgress.Name = "gbProgress";
+            this.gbProgress.Size = new System.Drawing.Size(294, 330);
+            this.gbProgress.TabIndex = 5;
+            this.gbProgress.TabStop = false;
+            // 
+            // lblProgress
+            // 
+            this.lblProgress.AutoSize = true;
+            this.lblProgress.Location = new System.Drawing.Point(6, 15);
+            this.lblProgress.Name = "lblProgress";
+            this.lblProgress.Size = new System.Drawing.Size(50, 12);
+            this.lblProgress.TabIndex = 8;
+            this.lblProgress.Text = "Progress";
+            // 
+            // bw
+            // 
+            this.bw.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bw_DoWork);
+            this.bw.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_RunWorkerCompleted);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 561);
+            this.Controls.Add(this.gbProgress);
             this.Controls.Add(this.gbInfomations);
             this.Controls.Add(this.listView);
             this.Controls.Add(this.gbTop);
@@ -221,6 +249,8 @@
             this.gbTop.PerformLayout();
             this.gbInfomations.ResumeLayout(false);
             this.gbInfomations.PerformLayout();
+            this.gbProgress.ResumeLayout(false);
+            this.gbProgress.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -244,6 +274,9 @@
         private System.Windows.Forms.Button btnGetPictures;
         private System.Windows.Forms.ListView listView;
         private System.Windows.Forms.Button btnSelectAll;
+        private System.Windows.Forms.GroupBox gbProgress;
+        private System.Windows.Forms.Label lblProgress;
+        private System.ComponentModel.BackgroundWorker bw;
     }
 }
 

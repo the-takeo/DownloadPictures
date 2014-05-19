@@ -16,6 +16,7 @@ namespace DownloadPicturesGUI
     public partial class FormMain : Form
     {
         DownloadPictures.DownloadPictures dp=new DownloadPictures.DownloadPictures();
+        List<string> SelectedItems = new List<string>();
 
         public FormMain()
         {
@@ -25,10 +26,23 @@ namespace DownloadPicturesGUI
 
             listView.LargeImageList = imageList;
             listView.SmallImageList = imageList;
+
+            this.Text = "DownloadPictures";
         }
 
         private void btnGetPictures_Click(object sender, EventArgs e)
         {
+
+            btnGetPictures.Enabled = false;
+            btnSelectAll.Enabled = false;
+            btnSelectFolder.Enabled = false;
+            btnStartDownload.Enabled = false;
+            listView.Enabled = false;
+            tbUrl.Enabled = false;
+            tbFolder.Enabled = false;
+
+            lblProgress.Text = "Webページから画像を取得中";
+
             listView.Clear();
             imageList.Images.Clear();
 
@@ -50,18 +64,38 @@ namespace DownloadPicturesGUI
             }
 
             selectallpictures();
+
+            btnGetPictures.Enabled = true;
+            btnSelectAll.Enabled = true;
+            btnSelectFolder.Enabled = true;
+            btnStartDownload.Enabled = true;
+            listView.Enabled = true;
+            tbUrl.Enabled = true;
+            tbFolder.Enabled = true;
+
+            lblProgress.Text = "Progress";
         }
 
         private void btnStartDownload_Click(object sender, EventArgs e)
         {
-            List<string> SelectedItems=new List<string>();
+            SelectedItems.Clear();
+
+            btnGetPictures.Enabled = false;
+            btnSelectAll.Enabled = false;
+            btnSelectFolder.Enabled = false;
+            btnStartDownload.Enabled = false;
+            listView.Enabled = false;
+            tbUrl.Enabled = false;
+            tbFolder.Enabled = false;
+
+            lblProgress.Text = "画像をダウンロード中";
 
             for (int i = 0; i < listView.SelectedItems.Count; i++)
             {
                 SelectedItems.Add(listView.SelectedItems[i].Text);
             }
 
-            dp.StartDownload(SelectedItems, tbFolder.Text);
+            bw.RunWorkerAsync();
         }
 
         private void btnSelectFolder_Click(object sender, EventArgs e)
@@ -88,6 +122,24 @@ namespace DownloadPicturesGUI
             }
 
             listView.Select();
+        }
+
+        private void bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            dp.StartDownload(SelectedItems, tbFolder.Text);
+        }
+
+        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            btnGetPictures.Enabled = true;
+            btnSelectAll.Enabled = true;
+            btnSelectFolder.Enabled = true;
+            btnStartDownload.Enabled = true;
+            listView.Enabled = true;
+            tbUrl.Enabled = true;
+            tbFolder.Enabled = true;
+
+            lblProgress.Text = "Progress";
         }
     }
 }
