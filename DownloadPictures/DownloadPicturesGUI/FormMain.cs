@@ -17,6 +17,7 @@ namespace DownloadPicturesGUI
     {
         DownloadPictures.DownloadPictures dp=new DownloadPictures.DownloadPictures();
         List<string> SelectedItems = new List<string>();
+        List<string> Adresses = new List<string>();
 
         public FormMain()
         {
@@ -25,7 +26,6 @@ namespace DownloadPicturesGUI
             lblTop.Text = "URLを入力し、「URLから画像を取得する」ボタンを押してください。\nダウンロードしたい画像を選択し、「ダウンロードする」ボタンを押してください。";
 
             listView.LargeImageList = imageList;
-            listView.SmallImageList = imageList;
 
             this.Text = "DownloadPictures";
         }
@@ -46,12 +46,12 @@ namespace DownloadPicturesGUI
             listView.Clear();
             imageList.Images.Clear();
 
-            List<string> Adresses = dp.GetPictures(tbUrl.Text);
+            Adresses = dp.GetPictures(tbUrl.Text);
 
             WebClient wc = new WebClient();
             Stream stream;
 
-            for (int i=0;i<Adresses.Count;i++)
+            for (int i = 0; i < Adresses.Count; i++)
             {
                 string url = Adresses[i];
                 stream = wc.OpenRead(url);
@@ -95,7 +95,7 @@ namespace DownloadPicturesGUI
                 SelectedItems.Add(listView.SelectedItems[i].Text);
             }
 
-            bw.RunWorkerAsync();
+            bwDownload.RunWorkerAsync();
         }
 
         private void btnSelectFolder_Click(object sender, EventArgs e)
@@ -124,13 +124,15 @@ namespace DownloadPicturesGUI
             listView.Select();
         }
 
-        private void bw_DoWork(object sender, DoWorkEventArgs e)
+        private void bwDownload_DoWork(object sender, DoWorkEventArgs e)
         {
             dp.StartDownload(SelectedItems, tbFolder.Text);
         }
 
-        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void bwDownload_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            MessageBox.Show("ダウンロードが完了しました。", "Completed");
+
             btnGetPictures.Enabled = true;
             btnSelectAll.Enabled = true;
             btnSelectFolder.Enabled = true;

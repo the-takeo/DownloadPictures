@@ -36,18 +36,18 @@
             this.gbTop = new System.Windows.Forms.GroupBox();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.gbInfomations = new System.Windows.Forms.GroupBox();
-            this.btnSelectAll = new System.Windows.Forms.Button();
-            this.btnStartDownload = new System.Windows.Forms.Button();
-            this.btnGetPictures = new System.Windows.Forms.Button();
             this.btnSelectFolder = new System.Windows.Forms.Button();
             this.tbFolder = new System.Windows.Forms.TextBox();
             this.tbUrl = new System.Windows.Forms.TextBox();
             this.lblFolder = new System.Windows.Forms.Label();
             this.lblUrl = new System.Windows.Forms.Label();
+            this.btnSelectAll = new System.Windows.Forms.Button();
+            this.btnStartDownload = new System.Windows.Forms.Button();
+            this.btnGetPictures = new System.Windows.Forms.Button();
             this.listView = new System.Windows.Forms.ListView();
             this.gbProgress = new System.Windows.Forms.GroupBox();
             this.lblProgress = new System.Windows.Forms.Label();
-            this.bw = new System.ComponentModel.BackgroundWorker();
+            this.bwDownload = new System.ComponentModel.BackgroundWorker();
             this.menuStrip.SuspendLayout();
             this.gbTop.SuspendLayout();
             this.gbInfomations.SuspendLayout();
@@ -121,36 +121,6 @@
             this.gbInfomations.TabStop = false;
             this.gbInfomations.Text = "Imformations";
             // 
-            // btnSelectAll
-            // 
-            this.btnSelectAll.Location = new System.Drawing.Point(8, 301);
-            this.btnSelectAll.Name = "btnSelectAll";
-            this.btnSelectAll.Size = new System.Drawing.Size(75, 23);
-            this.btnSelectAll.TabIndex = 7;
-            this.btnSelectAll.Text = "全選択";
-            this.btnSelectAll.UseVisualStyleBackColor = true;
-            this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
-            // 
-            // btnStartDownload
-            // 
-            this.btnStartDownload.Location = new System.Drawing.Point(158, 301);
-            this.btnStartDownload.Name = "btnStartDownload";
-            this.btnStartDownload.Size = new System.Drawing.Size(130, 23);
-            this.btnStartDownload.TabIndex = 6;
-            this.btnStartDownload.Text = "ダウンロードする";
-            this.btnStartDownload.UseVisualStyleBackColor = true;
-            this.btnStartDownload.Click += new System.EventHandler(this.btnStartDownload_Click);
-            // 
-            // btnGetPictures
-            // 
-            this.btnGetPictures.Location = new System.Drawing.Point(158, 272);
-            this.btnGetPictures.Name = "btnGetPictures";
-            this.btnGetPictures.Size = new System.Drawing.Size(130, 23);
-            this.btnGetPictures.TabIndex = 5;
-            this.btnGetPictures.Text = "URLから画像を取得する";
-            this.btnGetPictures.UseVisualStyleBackColor = true;
-            this.btnGetPictures.Click += new System.EventHandler(this.btnGetPictures_Click);
-            // 
             // btnSelectFolder
             // 
             this.btnSelectFolder.Location = new System.Drawing.Point(265, 37);
@@ -193,6 +163,36 @@
             this.lblUrl.TabIndex = 0;
             this.lblUrl.Text = "URL";
             // 
+            // btnSelectAll
+            // 
+            this.btnSelectAll.Location = new System.Drawing.Point(8, 301);
+            this.btnSelectAll.Name = "btnSelectAll";
+            this.btnSelectAll.Size = new System.Drawing.Size(75, 23);
+            this.btnSelectAll.TabIndex = 7;
+            this.btnSelectAll.Text = "全選択";
+            this.btnSelectAll.UseVisualStyleBackColor = true;
+            this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
+            // 
+            // btnStartDownload
+            // 
+            this.btnStartDownload.Location = new System.Drawing.Point(158, 301);
+            this.btnStartDownload.Name = "btnStartDownload";
+            this.btnStartDownload.Size = new System.Drawing.Size(130, 23);
+            this.btnStartDownload.TabIndex = 6;
+            this.btnStartDownload.Text = "ダウンロードする";
+            this.btnStartDownload.UseVisualStyleBackColor = true;
+            this.btnStartDownload.Click += new System.EventHandler(this.btnStartDownload_Click);
+            // 
+            // btnGetPictures
+            // 
+            this.btnGetPictures.Location = new System.Drawing.Point(158, 272);
+            this.btnGetPictures.Name = "btnGetPictures";
+            this.btnGetPictures.Size = new System.Drawing.Size(130, 23);
+            this.btnGetPictures.TabIndex = 5;
+            this.btnGetPictures.Text = "URLから画像を取得する";
+            this.btnGetPictures.UseVisualStyleBackColor = true;
+            this.btnGetPictures.Click += new System.EventHandler(this.btnGetPictures_Click);
+            // 
             // listView
             // 
             this.listView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -225,10 +225,10 @@
             this.lblProgress.TabIndex = 8;
             this.lblProgress.Text = "Progress";
             // 
-            // bw
+            // bwDownload
             // 
-            this.bw.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bw_DoWork);
-            this.bw.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_RunWorkerCompleted);
+            this.bwDownload.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwDownload_DoWork);
+            this.bwDownload.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwDownload_RunWorkerCompleted);
             // 
             // FormMain
             // 
@@ -276,7 +276,7 @@
         private System.Windows.Forms.Button btnSelectAll;
         private System.Windows.Forms.GroupBox gbProgress;
         private System.Windows.Forms.Label lblProgress;
-        private System.ComponentModel.BackgroundWorker bw;
+        private System.ComponentModel.BackgroundWorker bwDownload;
     }
 }
 
