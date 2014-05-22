@@ -59,8 +59,6 @@ namespace DownloadPictures
     /// </summary>
     public class DownloadPictures
     {
-        //List<string> picUrls = new List<string>();
-
         string[] invalidPathStrings = new string[9] { @"\", @"/", @"?", @":", @"|", @"*", @"<", @">", @"""" };
         List<string> picExtensions = new List<string>() { ".jpg", ".jpeg", ".gif", ".png", ".bmp" };
 
@@ -70,6 +68,14 @@ namespace DownloadPictures
 
         TimeSpan timeout = new TimeSpan(0, 0, 10);
         DateTime start = new DateTime();
+
+        List<string> filter_ = new List<string>();
+
+        public DownloadPictures(List<string> filter=null)
+        {
+            if (filter != null)
+                filter_ = filter;
+        }
 
         /// <summary>
         /// 指定したURLのWebページに表示されている画像アドレスを取得し、
@@ -94,9 +100,27 @@ namespace DownloadPictures
                 if (picExtensions.Contains(Path.GetExtension(picUrl)) == false)
                     continue;
 
+                //フィルター式が設定されている場合、除外する
+                if (filter_ != null)
+                {
+                    bool isFiltered = false;
+
+                    foreach (var item in filter_)
+                    {
+                        if(picUrl.Contains(item))
+                        {
+                            isFiltered = true;
+                            break;
+                        }
+                    }
+
+                    if (isFiltered) 
+                        continue;
+                }
+
                 if (pictureAdresses.Contains(picUrl) == false)
                 {
-                    pictureAdresses.Add(picElement.GetAttribute("src"));
+                    pictureAdresses.Add(picUrl);
                 }
             }
 
@@ -116,6 +140,7 @@ namespace DownloadPictures
                     }
                 }
             }
+
             return pictureAdresses;
         }
 
@@ -164,7 +189,13 @@ namespace DownloadPictures
                 wc.DownloadFileAsync(new Uri(picUrl), folder + downloadingfileName);
             }
 
-            waitforAsync();
+            if(waitforAsync()==false)
+            {
+                wc.CancelAsync();
+                Console.WriteLine("{0}件中{1}件目のダウンロードが失敗しました。", numberOfPictures, count);
+                count++;
+                isDownloading = false;
+            }
         }
 
         void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
