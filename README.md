@@ -1,8 +1,23 @@
 ﻿DownloadPictures
 ================
+### About this
 
-Webページ上の画像を一括ダウンロードする。
-第一コマンドライン変数にWebページのURLを、
-第二コマンドライン変数に保存先Folder名を渡す。
+指定したWebページ上の画像を取得し、一括ダウンロードします。
+
+### How to use
+
+使用例:   
+<code>
+string url = "WebページのURL";
+string folder = "保存先フォルダのアドレス";
+
+DownloadPictures dp = new DownloadPictures();
+
+// 指定したURLのページ上に存在する画像のURLリスト
+List pictures = dp.GetPictures(url);
+
+// 渡されたURLリストの画像を取得し、指定したフォルダにダウンロードします。
+dp.StartDownload(pictures, dolder);
+</code>
 
 Bulk download the image on a Web page.

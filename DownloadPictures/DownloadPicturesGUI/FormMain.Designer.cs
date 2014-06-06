@@ -165,6 +165,7 @@
             // 
             // btnSelectAll
             // 
+            this.btnSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSelectAll.Location = new System.Drawing.Point(8, 301);
             this.btnSelectAll.Name = "btnSelectAll";
             this.btnSelectAll.Size = new System.Drawing.Size(75, 23);
@@ -175,6 +176,7 @@
             // 
             // btnStartDownload
             // 
+            this.btnStartDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStartDownload.Location = new System.Drawing.Point(158, 301);
             this.btnStartDownload.Name = "btnStartDownload";
             this.btnStartDownload.Size = new System.Drawing.Size(130, 23);
@@ -185,6 +187,7 @@
             // 
             // btnGetPictures
             // 
+            this.btnGetPictures.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGetPictures.Location = new System.Drawing.Point(158, 272);
             this.btnGetPictures.Name = "btnGetPictures";
             this.btnGetPictures.Size = new System.Drawing.Size(130, 23);
@@ -198,6 +201,7 @@
             this.listView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView.CheckBoxes = true;
             this.listView.Location = new System.Drawing.Point(12, 133);
             this.listView.Name = "listView";
             this.listView.Size = new System.Drawing.Size(260, 416);

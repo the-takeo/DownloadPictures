@@ -19,13 +19,19 @@ namespace DownloadPicturesGUI
         List<string> SelectedItems = new List<string>();
         List<string> Adresses = new List<string>();
 
+        const int listWidth = 100;
+        const int listHeight = 80;
+
         public FormMain()
         {
             InitializeComponent();
 
             lblTop.Text = "URLを入力し、「URLから画像を取得する」ボタンを押してください。\nダウンロードしたい画像を選択し、「ダウンロードする」ボタンを押してください。";
 
+            imageList.ImageSize = new Size(listWidth, listHeight);
             listView.LargeImageList = imageList;
+
+            this.MinimumSize = new Size(600, 600);
 
             this.Text = "DownloadPictures";
         }
@@ -56,10 +62,12 @@ namespace DownloadPicturesGUI
                 string url = Adresses[i];
                 stream = wc.OpenRead(url);
                 Image image = Image.FromStream(stream);
+                Image thumbnail = createThumbnail(image, listWidth, listHeight);
 
-                imageList.Images.Add(image);
+                imageList.Images.Add(thumbnail);
 
                 listView.Items.Add(url, i);
+                listView.Items[i].Checked = true;
                 stream.Close();
             }
 
@@ -90,9 +98,9 @@ namespace DownloadPicturesGUI
 
             lblProgress.Text = "画像をダウンロード中";
 
-            for (int i = 0; i < listView.SelectedItems.Count; i++)
+            for (int i = 0; i < listView.CheckedItems.Count; i++)
             {
-                SelectedItems.Add(listView.SelectedItems[i].Text);
+                SelectedItems.Add(listView.CheckedItems[i].Text);
             }
 
             bwDownload.RunWorkerAsync();
@@ -142,6 +150,26 @@ namespace DownloadPicturesGUI
             tbFolder.Enabled = true;
 
             lblProgress.Text = "Progress";
+        }
+
+        Image createThumbnail(Image image, int width, int height)
+        {
+            Bitmap canvas = new Bitmap(width, height);
+
+            Graphics g = Graphics.FromImage(canvas);
+            g.FillRectangle(new SolidBrush(Color.White), 0, 0, width, height);
+
+            float fw = (float)width / (float)image.Width;
+            float fh = (float)height / (float)image.Height;
+
+            float scale = Math.Min(fw, fh);
+            fw = image.Width * scale;
+            fh = image.Height * scale;
+
+            g.DrawImage(image, (width - fw) / 2, (height - fh) / 2, fw, fh);
+            g.Dispose();
+
+            return canvas;
         }
     }
 }
