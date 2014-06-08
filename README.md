@@ -6,18 +6,16 @@
 
 ### How to use
 
-使用例:   
-<code>
-string url = "WebページのURL";
-string folder = "保存先フォルダのアドレス";
+使用例:  
+    string url = "WebページのURL";   
+    string folder = "保存先フォルダのアドレス";
+    
+    DownloadPictures dp = new DownloadPictures();
 
-DownloadPictures dp = new DownloadPictures();
-
-// 指定したURLのページ上に存在する画像のURLリスト
-List pictures = dp.GetPictures(url);
-
-// 渡されたURLリストの画像を取得し、指定したフォルダにダウンロードします。
-dp.StartDownload(pictures, dolder);
-</code>
+    // 指定したURLのページ上に存在する画像のURLリスト
+    List pictures = dp.GetPictures(url);
+    
+    // 渡されたURLリストの画像を取得し、指定したフォルダにダウンロードします。
+    dp.StartDownload(pictures, dolder);
 
 Bulk download the image on a Web page.
