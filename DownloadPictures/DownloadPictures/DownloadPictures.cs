@@ -211,7 +211,25 @@ namespace DownloadPictures
                 isDownloading = true;
                 start = DateTime.Now;
 
-                wc.DownloadFileAsync(new Uri(picUrl), folder + downloadingfileName);
+                string fileName=folder + downloadingfileName;
+                int count = 1;
+
+                //保存名が既に存在する場合、末尾にナンバリングを行い重複しないようにする
+                while (System.IO.File.Exists(fileName))
+                {
+                    string extension = Path.GetExtension(fileName);
+
+                    fileName = fileName.Remove(fileName.Length - extension.Length, extension.Length);
+
+                    if (count != 1)
+                        fileName = fileName.Remove(fileName.Length - count.ToString().Length, count.ToString().Length);
+
+                    fileName = fileName + count.ToString() + extension;
+
+                    count++;
+                }
+
+                wc.DownloadFileAsync(new Uri(picUrl), fileName);
             }
 
             if(waitforAsync()==false)
