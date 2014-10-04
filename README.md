@@ -14,7 +14,7 @@
     DownloadPictures dp = new DownloadPictures();
 
     // 指定したURLのページ上に存在する画像のURLリスト
-    List pictures = dp.GetPictures(url);
+    List<string> pictures = dp.GetPictures(url);
 
     // 渡されたURLリストの画像を取得し、指定したフォルダにダウンロードします。
     dp.StartDownload(pictures, folder);
