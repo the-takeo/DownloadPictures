@@ -2,22 +2,19 @@
 ================
 ### About this
 
-指定したWebページ上の画像を取得し、一括ダウンロードします。
-HTML解析してリンク取得しているだけなので、取得できない場合もあります。許してください。
+Bulk download the image on a Web page.
 
 ### How to use
 
-使用例:  
+Example:  
 
-    string url = "WebページのURL";   
-    string folder = "保存先フォルダのアドレス";
+    string url = "Page's URL";   
+    string folder = "Local folder address";
 
     DownloadPictures dp = new DownloadPictures();
 
-    // 指定したURLのページ上に存在する画像のURLリスト
+    // URL list of Pictures.
     List<string> pictures = dp.GetPictures(url);
 
-    // 渡されたURLリストの画像を取得し、指定したフォルダにダウンロードします。
+    // Download to local folder.
     dp.StartDownload(pictures, folder);
-
-Bulk download the image on a Web page.
